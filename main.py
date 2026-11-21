@@ -8,6 +8,18 @@ from lib import write_grid
 
 Grid = list[list[int]]
 
+"Valeurs par défault des paramètres du programme"
+
+nb_cells = 10
+max_iter = 20
+seed = 42
+output_directory = "outputs"
+type_sortie = "image"
+periodic = False
+
+
+
+
 # --- A ---
 def count_neighbors(grid: Grid, row: int, col: int, periodic: bool) -> int:
     """Nombre de voisines vivantes de la cellule (row, col)."""
