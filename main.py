@@ -121,27 +121,35 @@ def write_images(grids: list[Grid], output_directory: str) -> None:
 # --- C ---
 def positive_int(value: str) -> int:
     """Convertit en entier strictement positif (pour argparse -n)."""
+
     try:
         number = int(value)
     except ValueError:
         raise argparse.ArgumentTypeError(f"'{value}' n'est pas un entier")
+    
     if number <= 0:
         raise argparse.ArgumentTypeError(f"{number} doit être strictement positif")
+    
     return number
 
 def non_negative_int(value: str) -> int:
     """Convertit en entier positif ou nul (pour argparse -m)."""
+
     try:
         number = int(value)
     except ValueError:
         raise argparse.ArgumentTypeError(f"'{value}' n'est pas un entier")
+    
     if number < 0:
         raise argparse.ArgumentTypeError(f"{number} doit être positif ou nul")
+    
     return number
 
 def parse_args() -> argparse.Namespace:
     """Lit et vérifie les options -n -m -s -o -t -p."""
+
     parser = argparse.ArgumentParser(description="Jeu de la vie de Conway")
+    
     parser.add_argument("-n", "--nb_cells", type=positive_int, default=10,
                         help="nombre de cellules par côté (défaut : 10)")
     parser.add_argument("-m", "--max_iterations", type=non_negative_int, default=20,
@@ -154,10 +162,25 @@ def parse_args() -> argparse.Namespace:
                         default="image", help="type de sortie (défaut : image)")
     parser.add_argument("-p", "--periodic", action="store_true",
                         help="active les conditions aux limites périodiques")
+    
     return parser.parse_args()
 
 def random_grid(nb_cells: int, seed: int) -> Grid:
     """Grille aléatoire reproductible avec random.Random(seed)."""
+
+    rng = random.Random(seed)
+
+    grille = []
+
+    for i in range(nb_cells):
+        ligne = []
+
+        for j in range(nb_cells):
+            valeur = rng.choice([0, 1])
+            ligne.append(valeur)
+        grille.append(ligne)
+
+    return grille
 
 def fail(message: str) -> None:
     """Écrit le message sur STDERR et quitte avec le code 1."""
