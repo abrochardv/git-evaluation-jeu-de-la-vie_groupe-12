@@ -38,7 +38,7 @@ def count_neighbors(grid: Grid, row: int, col: int, periodic: bool) -> int:
 def next_generation(grid: Grid, periodic: bool) -> Grid:
     """Renvoie la génération suivante, sans modifier la grille reçue."""
 
-     n = len(grid)
+    n = len(grid)
     new_grid = []
 
     for i in range(n):
