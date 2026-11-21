@@ -149,7 +149,7 @@ def parse_args() -> argparse.Namespace:
     """Lit et vérifie les options -n -m -s -o -t -p."""
 
     parser = argparse.ArgumentParser(description="Jeu de la vie de Conway")
-    
+
     parser.add_argument("-n", "--nb_cells", type=positive_int, default=10,
                         help="nombre de cellules par côté (défaut : 10)")
     parser.add_argument("-m", "--max_iterations", type=non_negative_int, default=20,
@@ -184,6 +184,9 @@ def random_grid(nb_cells: int, seed: int) -> Grid:
 
 def fail(message: str) -> None:
     """Écrit le message sur STDERR et quitte avec le code 1."""
+    
+    print(f"Erreur : {message}", file=sys.stderr)
+    sys.exit(1)
 
 def main():
     try:
