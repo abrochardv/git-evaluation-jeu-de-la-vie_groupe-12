@@ -12,8 +12,56 @@ Grid = list[list[int]]
 def count_neighbors(grid: Grid, row: int, col: int, periodic: bool) -> int:
     """Nombre de voisines vivantes de la cellule (row, col)."""
 
+    n = len(grid)
+    count = 0
+
+    for i in range(-1, 2):
+        for j in range(-1, 2):
+
+            if i == 0 and j == 0:
+                continue
+
+            r = row + i
+            c = col + j
+
+            if periodic:
+                r = r % n
+                c = c % n
+
+                count += grid[r][c]
+
+            elif 0 <= r < n and 0 <= c < n:
+                count += grid[r][c]
+
+    return count
+    
 def next_generation(grid: Grid, periodic: bool) -> Grid:
     """Renvoie la génération suivante, sans modifier la grille reçue."""
+
+     n = len(grid)
+    new_grid = []
+
+    for i in range(n):
+        row = []
+
+        for j in range(n):
+            neighbors = count_neighbors(grid, i, j, periodic)
+
+            if grid[i][j] == 1:
+                if neighbors == 2 or neighbors == 3:
+                    row.append(1)
+                else:
+                    row.append(0)
+
+            else:
+                if neighbors == 3:
+                    row.append(1)
+                else:
+                    row.append(0)
+
+        new_grid.append(row)
+
+    return new_grid
 
 # --- B ---
 def read_grid_from_stdin() -> Grid:
