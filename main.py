@@ -76,8 +76,41 @@ def next_generation(grid: Grid, periodic: bool) -> Grid:
     return new_grid
 
 # --- B ---
-def read_grid_from_stdin() -> Grid:
-    """Lit et valide la grille sur STDIN. Quitte avec une erreur si invalide."""
+def create_grid() -> Grid:
+    """Si une grille est fournie en entrée lit et valide la grille sur STDIN.
+    Sinon grille générée aléatoirement"""
+    entree = sys.stdin.read().splitlines()
+    global nb_cells
+    if entree:
+        while entree and not entree[-1].strip():
+            entree.pop()
+        try:
+            cells = int(entree[0])
+        except ValueError :
+            raise ValueError(f"{entree[0]} n'est pas un entier")
+        if cells <= 0:
+            raise ValueError(f"La taille doit être strictement positive")
+        if len(entree) != cells+1:
+            raise ValueError("Nombre de lignes incorrectes")
+
+        nb_cells = cells
+        grid = []
+
+        for i, entree in enumerate(entree[1:], start=2):
+            ligne = entree.split()
+            if len(ligne) != cells:
+                raise ValueError(f"Ligne {i} : {cells} valeurs attendues, {len(ligne)} reçues")
+            for c in ligne:
+                if c not in ("0", "1"):
+                    raise ValueError(f"Ligne {i} : valeur '{c}' invalide (0 ou 1 attendu)")
+            grid.append([int(c) for c in ligne])
+
+        return grid
+
+    else:
+        rng = random.Random(seed)
+        return [[rng.choice([0, 1]) for _ in range(nb_cells)]for _ in range(nb_cells)]
+
 
 def format_grid_text(grid: Grid, iteration: int) -> str:
     """Renvoie 'iteration: N' suivi des lignes de la grille."""
@@ -96,18 +129,14 @@ def fail(message: str) -> None:
     """Écrit le message sur STDERR et quitte avec le code 1."""
 
 def main():
-    nb_cells = 50
-
-    rng = random.Random(4200)
-
-    matrix = [
-        [rng.choice([0, 1]) for _ in range(nb_cells)]
-        for _ in range(nb_cells)
-    ]
-
+    try:
+        grid = create_grid()
+    except ValueError as erreur:
+        print('Erreur :',erreur,file=sys.stderr)
+        sys.exit(1)
     iter = 0
     filename = f"outputs/grid_{iter:04d}.png"
-    write_grid(matrix=matrix, filename=filename)
+    write_grid(matrix=grid, filename=filename)
 
 if __name__ == "__main__":
     main()
