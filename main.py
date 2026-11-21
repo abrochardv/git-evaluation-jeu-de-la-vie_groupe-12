@@ -184,19 +184,30 @@ def random_grid(nb_cells: int, seed: int) -> Grid:
 
 def fail(message: str) -> None:
     """Écrit le message sur STDERR et quitte avec le code 1."""
-    
+
     print(f"Erreur : {message}", file=sys.stderr)
     sys.exit(1)
 
-def main():
-    try:
-        grid = create_grid()
-    except ValueError as erreur:
-        print('Erreur :',erreur,file=sys.stderr)
-        sys.exit(1)
-    iter = 0
-    filename = f"outputs/grid_{iter:04d}.png"
-    write_grid(matrix=grid, filename=filename)
+def main() -> None:
+    args = parse_args()
 
-if __name__ == "__main__":
-    main()
+    if sys.stdin.isatty():
+        grid = random_grid(args.nb_cells, args.seed)
+    else:
+        grid = read_grid_from_stdin()
+
+    if args.output_type == "image":
+        grids = [grid]
+
+        for _ in range(args.max_iterations):
+            grid = next_generation(grid, args.periodic)
+            grids.append(grid)
+
+        write_images(grids, args.output_directory)
+        print(f"Generation of {len(grids)} images "
+              f"in directory {args.output_directory}")
+    else:
+        
+        for _ in range(args.max_iterations):
+            grid = next_generation(grid, args.periodic)
+        print(format_grid_text(grid, args.max_iterations))
