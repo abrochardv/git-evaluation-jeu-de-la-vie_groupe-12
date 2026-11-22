@@ -96,8 +96,13 @@ def read_grid_from_stdin() -> Grid:
 
     return grid
 
-def format_grid_text(grid: Grid, iteration: int) -> str:
+def format_grid_text(grids: list[Grid]) -> None:
     """Renvoie 'iteration: N' suivi des lignes de la grille."""
+    for i in range(len(grids)):
+        print("Iteration:",i)
+        for ligne in grids[i]:
+            print(*ligne,sep=' ')
+
 
 def write_images(grids: list[Grid], output_directory: str) -> None:
     """Écrit grid_0000.png, grid_0001.png... avec write_grid de lib.py."""
@@ -179,22 +184,16 @@ def main() -> None:
         grid = random_grid(args.nb_cells, args.seed)
     else:
         grid = read_grid_from_stdin()
-    print(grid)
+    grids = [grid]
+    for _ in range(args.max_iterations):
+        grid = next_generation(grid, args.periodic)
+        grids.append(grid)
     if args.output_type == "image":
-        grids = [grid]
-
-        for _ in range(args.max_iterations):
-            grid = next_generation(grid, args.periodic)
-            grids.append(grid)
-
         write_images(grids, args.output_directory)
         print(f"Generation of {len(grids)} images "
               f"in directory {args.output_directory}")
     else:
-        
-        for _ in range(args.max_iterations):
-            grid = next_generation(grid, args.periodic)
-        print(format_grid_text(grid, args.max_iterations))
+        format_grid_text(grids)
 
 if __name__ == "__main__":
     main()
