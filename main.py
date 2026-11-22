@@ -98,10 +98,9 @@ def read_grid_from_stdin() -> Grid:
 
 def format_grid_text(grids: list[Grid]) -> None:
     """Renvoie 'iteration: N' suivi des lignes de la grille."""
-    for i in range(len(grids)):
-        print("Iteration:",i)
-        for ligne in grids[i]:
-            print(*ligne,sep=' ')
+    print("iteration:",len(grids)-1)
+    for ligne in grids[-1]:
+        print(*ligne,sep=' ')
 
 
 def write_images(grids: list[Grid], output_directory: str) -> None:
