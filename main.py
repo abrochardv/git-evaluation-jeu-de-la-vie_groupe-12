@@ -119,24 +119,95 @@ def write_images(grids: list[Grid], output_directory: str) -> None:
     """Écrit grid_0000.png, grid_0001.png... avec write_grid de lib.py."""
 
 # --- C ---
+def positive_int(value: str) -> int:
+    """Convertit en entier strictement positif (pour argparse -n)."""
+
+    try:
+        number = int(value)
+    except ValueError:
+        raise argparse.ArgumentTypeError(f"'{value}' n'est pas un entier")
+    
+    if number <= 0:
+        raise argparse.ArgumentTypeError(f"{number} doit être strictement positif")
+    
+    return number
+
+def non_negative_int(value: str) -> int:
+    """Convertit en entier positif ou nul (pour argparse -m)."""
+
+    try:
+        number = int(value)
+    except ValueError:
+        raise argparse.ArgumentTypeError(f"'{value}' n'est pas un entier")
+    
+    if number < 0:
+        raise argparse.ArgumentTypeError(f"{number} doit être positif ou nul")
+    
+    return number
+
 def parse_args() -> argparse.Namespace:
     """Lit et vérifie les options -n -m -s -o -t -p."""
+
+    parser = argparse.ArgumentParser(description="Jeu de la vie de Conway")
+
+    parser.add_argument("-n", "--nb_cells", type=positive_int, default=10,
+                        help="nombre de cellules par côté (défaut : 10)")
+    parser.add_argument("-m", "--max_iterations", type=non_negative_int, default=20,
+                        help="numéro de la dernière itération (défaut : 20)")
+    parser.add_argument("-s", "--seed", type=int, default=42,
+                        help="graine aléatoire (défaut : 42)")
+    parser.add_argument("-o", "--output_directory", default="outputs",
+                        help="dossier des images (défaut : outputs)")
+    parser.add_argument("-t", "--output_type", choices=["image", "text"],
+                        default="image", help="type de sortie (défaut : image)")
+    parser.add_argument("-p", "--periodic", action="store_true",
+                        help="active les conditions aux limites périodiques")
+    
+    return parser.parse_args()
 
 def random_grid(nb_cells: int, seed: int) -> Grid:
     """Grille aléatoire reproductible avec random.Random(seed)."""
 
+    rng = random.Random(seed)
+
+    grille = []
+
+    for i in range(nb_cells):
+        ligne = []
+
+        for j in range(nb_cells):
+            valeur = rng.choice([0, 1])
+            ligne.append(valeur)
+        grille.append(ligne)
+
+    return grille
+
 def fail(message: str) -> None:
     """Écrit le message sur STDERR et quitte avec le code 1."""
 
-def main():
-    try:
-        grid = create_grid()
-    except ValueError as erreur:
-        print('Erreur :',erreur,file=sys.stderr)
-        sys.exit(1)
-    iter = 0
-    filename = f"outputs/grid_{iter:04d}.png"
-    write_grid(matrix=grid, filename=filename)
+    print(f"Erreur : {message}", file=sys.stderr)
+    sys.exit(1)
 
-if __name__ == "__main__":
-    main()
+def main() -> None:
+    args = parse_args()
+
+    if sys.stdin.isatty():
+        grid = random_grid(args.nb_cells, args.seed)
+    else:
+        grid = read_grid_from_stdin()
+
+    if args.output_type == "image":
+        grids = [grid]
+
+        for _ in range(args.max_iterations):
+            grid = next_generation(grid, args.periodic)
+            grids.append(grid)
+
+        write_images(grids, args.output_directory)
+        print(f"Generation of {len(grids)} images "
+              f"in directory {args.output_directory}")
+    else:
+        
+        for _ in range(args.max_iterations):
+            grid = next_generation(grid, args.periodic)
+        print(format_grid_text(grid, args.max_iterations))
