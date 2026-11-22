@@ -105,6 +105,8 @@ def format_grid_text(grids: list[Grid]) -> None:
 
 def write_images(grids: list[Grid], output_directory: str) -> None:
     """Écrit grid_0000.png, grid_0001.png... avec write_grid de lib.py."""
+    for i in range(len(grids)):
+        write_grid(grids[i], f"{output_directory}/grid_{i:04}.png")
 
 # --- C ---
 def positive_int(value: str) -> int:
