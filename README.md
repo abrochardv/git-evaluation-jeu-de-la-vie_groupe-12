@@ -1,5 +1,17 @@
 # Jeu de la vie groupe 12
 Ce projet est une simulation du [jeu de la vie de Conway](https://fr.wikipedia.org/wiki/Jeu_de_la_vie) écrite en Python. Le programme permet de générer une grille aléatoire ou de lire une grille sur l'entrée standard, puis de calculer son évolution avec des conditions aux limites fixes ou périodiques.
+
+- [Jeu de la vie groupe 12](#jeu-de-la-vie-groupe-12)
+  - [Installation](#installation)
+    - [Prérequis](#prérequis)
+    - [Clonage du dépôt](#clonage-du-dépôt)
+  - [Exécution](#exécution)
+  - [Arguments](#arguments)
+  - [Vidéos](#vidéos)
+  - [Auteurs](#auteurs)
+  - [Liens utiles](#liens-utiles)
+
+
 ## Installation
 ### Prérequis
 Ce projet nécessite: 
@@ -71,16 +83,21 @@ iteration: 1
 
 ## Vidéos
 
-Lien vers la video Jeu de la vie grille 50×50 graine 4200, groupe 12 (scénario 5) : 
-https://youtu.be/PlvEZ6jWCYM?si=mSSTn8cSqx__0X4P
+[Lien vers la video Jeu de la vie grille 50×50 graine 4200, groupe 12 (scénario 5)](https://youtu.be/PlvEZ6jWCYM?si=mSSTn8cSqx__0X4P)
 
-Lien vers Jeu de la vie historique du dépôt (Gource), groupe 12 :
-https://youtu.be/3N7GbPkDdW8?si=4W269rF5URIvQFhc
+[Lien vers Jeu de la vie historique du dépôt (Gource), groupe 12](https://youtu.be/3N7GbPkDdW8?si=4W269rF5URIvQFhc)
 
 ## Auteurs
-- Brochard Antoine
-- ABDALLAH Johan 46008158
-- ZEGHOUDI Mohamed 46007455
+| Nom | N° étudiant |
+|---|---|
+| BROCHARD Antoine | 42008983 |
+| ABDALLAH Johan | 46008158 |
+| ZEGHOUDI Mohamed |46007455 |
+
 ## Liens utiles
 
-
+ - [Règles du jeu de la vie de Conway](https://fr.wikipedia.org/wiki/Jeu_de_la_vie)
+ - [Syntaxe de rédaction Markdown](https://docs.github.com/fr/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax)
+ - [Documentation argparse](https://docs.python.org/fr/3/library/argparse.html)
+ - [Documentation ffmpeg](https://ffmpeg.org/ffmpeg.html)
+ - [Documentation gource](https://github.com/acaudwell/Gource/wiki)
